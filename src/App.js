@@ -376,7 +376,7 @@ function App() {
    const playAgain = ()=>{
         
         setHeadCoordinate((oldCoordinate)=>{
-              return  {
+              return  {...oldCoordinate,
                         length:0,
                         breadth:4,
                         snakeTail:[
