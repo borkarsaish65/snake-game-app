@@ -469,14 +469,14 @@ function App() {
                 <button ref={leftRef}>
                 Left
                 </button>
+                <button ref={downRef}>
+                Down
+                </button>
                 <button ref={rightRef}>
                    Right     
                 </button>
                 </div>
                 <div className='dflex-all-center'>
-                <button ref={downRef}>
-                Down
-                </button>
                 </div>
 
         </div>
