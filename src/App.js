@@ -1,6 +1,6 @@
 import './App.css';
-import {useState,useEffect} from 'react';
-let length = 20,breadth = 30;
+import {useState,useEffect, useRef} from 'react';
+let length = 30,breadth = 20;
 let timeOutIdForFoodGeneration;
 let snakeMovementInterval;
 
@@ -60,6 +60,14 @@ function App() {
   })
   let [direction,setDirection] = useState('right');
   let [gameOver,setGameOver] = useState(false);
+
+
+  let leftRef = useRef(null)
+  let rightRef = useRef(null)
+  let upRef = useRef(null)
+  let downRef = useRef(null)
+
+
   function getRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
       }
@@ -352,6 +360,42 @@ function App() {
               }
           
         document.addEventListener('keydown', handleKeyPress);
+
+        leftRef.current.addEventListener('click', ()=>{
+                setDirection((old)=>{
+                        if(old == 'right')
+                        return 'right';
+
+                        return 'left'
+                })   
+        });
+        rightRef.current.addEventListener('click', ()=>{
+                setDirection((old)=>{
+                        if(old == 'left')
+                        return 'left';
+
+                        return 'right'
+                }) 
+        });
+        downRef.current.addEventListener('click', ()=>{
+
+                setDirection((old)=>{
+                        if(old == 'up')
+                        return 'up';
+
+                        return 'down'
+                })
+        });
+        upRef.current.addEventListener('click', ()=>{
+                setDirection((old)=>{
+                        if(old == 'down')
+                        return 'down';
+                        
+                        return 'up'
+                })
+        });
+
+
         let generateFoodTimeOut
          if(gameOver == false)
          {
@@ -367,6 +411,12 @@ function App() {
             
         return () =>{
                 document.removeEventListener('keydown', handleKeyPress);
+
+                leftRef.current.removeEventListener('keydown', handleKeyPress);
+                rightRef.current.removeEventListener('keydown', handleKeyPress);
+                upRef.current.removeEventListener('keydown', handleKeyPress);
+                downRef.current.removeEventListener('keydown', handleKeyPress);
+
                 clearTimeout(generateFoodTimeOut);
                 clearInterval(snakeMovementInterval)
             } 
@@ -397,14 +447,39 @@ function App() {
   return (
     <div className="App">
     <div className='playground-container'>
-        <h1>Score:{headCoordinate.score}</h1>
-      {createBoard(length,breadth,headCoordinate).map((innerArray, outerIndex) => (
+        <h1 className='score-container'>Score:{headCoordinate.score}</h1>
+        <div className='board-container-parent'>
+        <div className='board-container'>
+        {createBoard(length,breadth,headCoordinate).map((innerArray, outerIndex) => (
         <div className='outerDiv' key={outerIndex}>
           {innerArray.map((item, innerIndex) => (
             <div key={innerIndex}>{item}</div>
           ))}
     </div>
       ))}
+        </div>
+        </div>
+        <div className='custom-key-container'>
+                <div className='dflex-all-center'>
+                <button ref={upRef}>
+                Up
+                </button>
+                </div>
+                <div className='dflex-justify-between'>
+                <button ref={leftRef}>
+                Left
+                </button>
+                <button ref={rightRef}>
+                   Right     
+                </button>
+                </div>
+                <div className='dflex-all-center'>
+                <button ref={downRef}>
+                Down
+                </button>
+                </div>
+
+        </div>
     </div>
     {gameOver ?     <div className='play-again-popup'>
                 <div className='score-container'>
