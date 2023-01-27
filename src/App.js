@@ -139,6 +139,22 @@ function App() {
         return stateContainer
   }
 
+function checkIfHeadHitBody(xCoordinate,yCoordinate,snakeTailArray)
+{
+
+        let filteredArray = holder.snakeTail.filter((array)=>{
+                if(array[0] == xCoordinate && array[1] == yCoordinate)
+                {
+                        return true;
+                }
+        })
+
+        if(filteredArray.length>0)
+        return true;
+
+
+}
+
   const endGameNow = ()=>{
         
         clearInterval(snakeMovementInterval);
@@ -146,25 +162,19 @@ function App() {
         setGameOver(true)
         setHeadCoordinate((oldCoordinate)=>{
                 let currentScore = oldCoordinate.score;
-                console.log(currentScore,'currscore')
                 let currentHighScore = oldCoordinate.highScore
-                console.log(currentHighScore,'currHighscore')
                 let newHighScore = currentHighScore;
                 if(currentScore > currentHighScore)
                 {
                         newHighScore = currentScore;
                 }
-                console.log(newHighScore,'newHighScore')
                 return {...oldCoordinate,highScore:newHighScore}
         })
   }
-  const fecilitateSnakeMovement = (direction)=>
+  const fecilitateSnakeMovement = ()=>
   {     
      setDirection((currentDirection)=>{
-        
-        
-        
-        
+      
         switch(currentDirection)
         {       
                 case "left":{
@@ -175,8 +185,7 @@ function App() {
                                 let newBreadth = oldCoordinate.breadth -1;
                                 if(newBreadth < 0)
                                 {
-                                        endGameNow();
-                                        
+                                        endGameNow();   
                                         holder =  {...oldCoordinate,gameOver:true}
                                         
                                 }
@@ -184,13 +193,7 @@ function App() {
                                 {
                                         holder =  {...oldCoordinate,breadth:newBreadth,snakeTail:[...oldCoordinate.snakeTail.slice(1), [oldCoordinate.length, oldCoordinate.breadth]]}
                                         
-                                        let filteredArray = holder.snakeTail.filter((array)=>{
-                                                if(array[0] == holder.length && array[1] == newBreadth)
-                                                {
-                                                        return true;
-                                                }
-                                        })
-                                        if(filteredArray.length>0)
+                                        if(checkIfHeadHitBody(holder.length,newBreadth,holder.snakeTail))
                                         endGameNow()
                                       
                                 }
@@ -217,14 +220,8 @@ function App() {
                                 else 
                                 {
                                         holder =  {...oldCoordinate,breadth:newBreadth,snakeTail:[...oldCoordinate.snakeTail.slice(1), [oldCoordinate.length, oldCoordinate.breadth]]}
-                                        
-                                        let filteredArray = holder.snakeTail.filter((array)=>{
-                                                if(array[0] == holder.length && array[1] == newBreadth)
-                                                {
-                                                        return true;
-                                                }
-                                        })
-                                        if(filteredArray.length>0)
+
+                                        if(checkIfHeadHitBody(holder.length,newBreadth,holder.snakeTail))
                                         endGameNow()
                                 }
 
@@ -254,13 +251,7 @@ function App() {
                         {
                                 holder =  {...oldCoordinate,length:newLength,snakeTail:[...oldCoordinate.snakeTail.slice(1), [oldCoordinate.length, oldCoordinate.breadth]]}
                                 
-                                let filteredArray = holder.snakeTail.filter((array)=>{
-                                        if(array[0] == newLength && array[1] == holder.breadth)
-                                        {
-                                                return true;
-                                        }
-                                })
-                                if(filteredArray.length>0)
+                                if(checkIfHeadHitBody(newLength,holder.breadth,holder.snakeTail))
                                 endGameNow()
                         }
 
@@ -288,13 +279,7 @@ function App() {
                                 {
                                         holder =  {...oldCoordinate,length:newLength,snakeTail:[...oldCoordinate.snakeTail.slice(1), [oldCoordinate.length, oldCoordinate.breadth]]}
                                         
-                                        let filteredArray = holder.snakeTail.filter((array)=>{
-                                                if(array[0] == newLength && array[1] == holder.breadth)
-                                                {
-                                                        return true;
-                                                }
-                                        })
-                                        if(filteredArray.length>0)
+                                        if(checkIfHeadHitBody(newLength,holder.breadth,holder.snakeTail))
                                         endGameNow()
                                 }
 
@@ -302,10 +287,6 @@ function App() {
                                 return holder;
                         })
                 }
-                break;
-                case "gameover":{
-                        clearInterval(snakeMovementInterval);
-               }
                break;
                 default:{
 
@@ -400,7 +381,7 @@ function App() {
          if(gameOver == false)
          {
                 snakeMovementInterval = setInterval(() => {
-                        fecilitateSnakeMovement(direction);
+                        fecilitateSnakeMovement();
                      }, 100);
          
                  generateFoodTimeOut = setTimeout(() => {
